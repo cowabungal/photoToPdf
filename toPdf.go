@@ -1,4 +1,4 @@
-package photoToPdf
+package photopdf
 
 import (
 	"fmt"
