@@ -11,19 +11,15 @@ import (
 import "path/filepath"
 import "github.com/signintech/gopdf"
 
-var (
-	src = "./assets"
-	as  = "./result.pdf"
-)
 
-func Convert() {
-	fmt.Println("Reading files from (", src, ") and saving the result as (", as,")")
+func Convert(source string) {
+	fmt.Println("Reading files from (", source, ") and saving the result assets (", source,")")
 	fmt.Println("-----------------------")
 	pdf := gopdf.GoPdf{}
 	pdf.Start(gopdf.Config{PageSize: *gopdf.PageSizeA4 })
-	jpgs, _ := filepath.Glob(src + "/*.jpg")
-	pngs, _ := filepath.Glob(src + "/*.png")
-	jpegs, _ := filepath.Glob(src + "/*.jpeg")
+	jpgs, _ := filepath.Glob(source + "/*.jpg")
+	pngs, _ := filepath.Glob(source + "/*.png")
+	jpegs, _ := filepath.Glob(source + "/*.jpeg")
 	files := append(jpgs, append(jpegs, pngs...)...)
 	for i := 0; i < len(files); i++ {
 		fmt.Println(i+1, "adding ", files[i])
@@ -35,8 +31,9 @@ func Convert() {
 		goodSize(files[i])
 		pdf.Image(files[i], 0, 0, nil)
 	}
-	fmt.Println("saving to ", as, " ...")
-	pdf.WritePdf(as)
+	fmt.Println("saving to ", source, " ...")
+	pdf.WritePdf(fmt.Sprintf("%s/result.pdf", source))
+
 	fmt.Println("-----------------------")
 	fmt.Println("Done, have fun ;)")
 }
@@ -47,9 +44,9 @@ const DefaultMaxWidth float64 = 595 * 1.6
 const DefaultMaxHeight float64 = 842 * 1.6
 
 // Рассчитываем размер изображения после масштабирования
-func calculateRatioFit(srcWidth, srcHeight int) (int, int) {
-	ratio := math.Min(DefaultMaxWidth/float64(srcWidth), DefaultMaxHeight/float64(srcHeight))
-	return int(math.Ceil(float64(srcWidth) * ratio)), int(math.Ceil(float64(srcHeight) * ratio))
+func calculateRatioFit(sourceWidth, sourceHeight int) (int, int) {
+	ratio := math.Min(DefaultMaxWidth/float64(sourceWidth), DefaultMaxHeight/float64(sourceHeight))
+	return int(math.Ceil(float64(sourceWidth) * ratio)), int(math.Ceil(float64(sourceHeight) * ratio))
 }
 
 func goodSize(file string) {
@@ -77,10 +74,11 @@ func goodSize(file string) {
 	imgfile, _ := os.Create(file)
 	defer imgfile.Close()
 
-	// Сохраняем файл в формате PNG
-	//err = png.Encode(imgfile, m)
+	// Сохраняем файл в формате jpeg
 	err = jpeg.Encode(imgfile, m, nil)
 	if err != nil {
 		return
 	}
 }
+
+
