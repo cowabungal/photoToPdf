@@ -16,7 +16,7 @@ var (
 	as  = "./result.pdf"
 )
 
-func convert() {
+func Convert() {
 	fmt.Println("Reading files from (", src, ") and saving the result as (", as,")")
 	fmt.Println("-----------------------")
 	pdf := gopdf.GoPdf{}
