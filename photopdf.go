@@ -31,7 +31,6 @@ func Convert(source string) {
 		pdf.AddPage()
 		goodSize(files[i])
 		pdf.Image(files[i], 0, 0, nil)
-		time.Sleep(1 * time.Second)
 	}
 	fmt.Println("saving to ", source, " ...")
 	pdf.WritePdf(fmt.Sprintf("%s/result.pdf", source))
